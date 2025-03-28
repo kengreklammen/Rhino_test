@@ -10,7 +10,7 @@ box::use(
 ui <- function(id) {
   ns <- shiny::NS(id)
   fluidPage(
-    textInput("nameInput", "Your name:"),
+    textInput(ns("nameInput"), "Your name:"),
     greeting_module$ui(ns("greet")) # Pass a namespace
   )
 }
