@@ -1,25 +1,24 @@
 box::use(
-  shiny[bootstrapPage, div, moduleServer, NS, renderUI, tags, uiOutput],
+  # External packages
+  shiny[fluidPage, textInput, reactive, moduleServer],
+  
+  # Own modules
+  app/view/greeting_module
 )
 
 #' @export
 ui <- function(id) {
-  ns <- NS(id)
-  bootstrapPage(
-    uiOutput(ns("message"))
+  ns <- shiny::NS(id)
+  fluidPage(
+    textInput("nameInput", "Your name:"),
+    greeting_module$ui(ns("greet")) # Pass a namespace
   )
 }
 
 #' @export
 server <- function(id) {
   moduleServer(id, function(input, output, session) {
-    output$message <- renderUI({
-      div(
-        style = "display: flex; justify-content: center; align-items: center; height: 100vh;",
-        tags$h1(
-          tags$a("Check out Rhino docs!", href = "https://appsilon.github.io/rhino/")
-        )
-      )
-    })
+    name <- reactive({input$nameInput})
+    greeting_module$server("greet", name) # Uses the exported server
   })
 }
